@@ -1,0 +1,616 @@
+/* ========================================
+   REGISTER PAGE - SISTEM PELANGGARAN SISWA
+   SMP Negeri 7 Jember
+   DENGAN ANIMASI SPLASH SCREEN & SLIDE
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Instrument Sans', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ========================================
+   SPLASH SCREEN (OPENING ANIMATION)
+   ======================================== */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e3a5f, #2563eb, #4f46e5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.splash-screen.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content {
+    text-align: center;
+    animation: splashPulse 1.5s ease-out;
+}
+
+.splash-logo-wrapper {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    animation: logoFloat 2s ease-in-out infinite;
+}
+
+.splash-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+}
+
+.splash-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.3px;
+}
+
+.splash-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+}
+
+.splash-loader {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.loader-bar {
+    width: 0%;
+    height: 100%;
+    background: white;
+    border-radius: 4px;
+    animation: loaderProgress 2.5s ease forwards;
+}
+
+@keyframes splashPulse {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes loaderProgress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   MAIN REGISTER CONTAINER
+   ======================================== */
+.register-container {
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    background: white;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    min-height: 600px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.register-container.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ----------------------------------------
+   LEFT SIDE - SCHOOL SECTION (BIRU)
+   ---------------------------------------- */
+.register-left {
+    flex: 1;
+    position: relative;
+    background: linear-gradient(145deg, #1e3a5f 0%, #2563eb 50%, #4f46e5 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    transform: translateX(0);
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animasi posisi awal di tengah (seperti splash screen) */
+.register-left.initial-center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 500px;
+    border-radius: 2rem;
+    z-index: 1001;
+}
+
+/* Animasi slide ke kiri */
+.register-left.slide-left {
+    transform: translateX(0);
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+}
+
+/* Background dekorasi */
+.register-left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%233b82f6' fill-opacity='0.1'/%3E%3Ccircle cx='100' cy='100' r='80' fill='%23ffffff' fill-opacity='0.05'/%3E%3Ccircle cx='300' cy='200' r='100' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+    background-size: cover;
+    background-position: center;
+}
+
+.register-left::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(30, 58, 95, 0.85), rgba(37, 99, 235, 0.75));
+}
+
+.school-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 70%);
+}
+
+.school-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    max-width: 320px;
+}
+
+.school-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.school-logo-img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}
+
+.school-content h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.school-content > p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.school-motto {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.school-motto i {
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.school-motto span {
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.school-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.school-stats .stat {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
+
+/* ----------------------------------------
+   RIGHT SIDE - REGISTER FORM (PUTIH)
+   ---------------------------------------- */
+.register-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: white;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+}
+
+.register-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.register-card {
+    width: 100%;
+    max-width: 380px;
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 1.8rem;
+}
+
+.register-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1e3a5f, #2563eb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.register-header p {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+/* Session & Error Status */
+.session-status {
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    color: #166534;
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-status {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Input Fields */
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-field-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: #94a3b8;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.modern-input {
+    width: 100%;
+    padding: 0.8rem 2.5rem 0.8rem 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 0.85rem;
+    font-family: 'Instrument Sans', sans-serif;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+}
+
+.modern-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+}
+
+.modern-input::placeholder {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.input-hint {
+    display: block;
+    font-size: 0.6rem;
+    color: #94a3b8;
+    margin-top: 0.3rem;
+    margin-left: 0.5rem;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: #3b82f6;
+}
+
+.input-error {
+    color: #ef4444;
+    font-size: 0.7rem;
+    margin-top: 0.3rem;
+    margin-left: 0.5rem;
+}
+
+/* Password Match */
+.password-match {
+    font-size: 0.65rem;
+    margin-top: 0.25rem;
+    margin-left: 0.5rem;
+}
+
+.password-match.match {
+    color: #10b981;
+}
+
+.password-match.not-match {
+    color: #ef4444;
+}
+
+/* Register Button */
+.register-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+}
+
+.register-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Login Link */
+.login-prompt {
+    text-align: center;
+    margin-top: 1.2rem;
+}
+
+.login-prompt p {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.login-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+/* Secure Note */
+.secure-note {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 900px) {
+    .register-container {
+        flex-direction: column;
+        max-width: 500px;
+        border-radius: 1.5rem;
+    }
+
+    .register-left {
+        padding: 2rem 1.5rem;
+        min-height: 320px;
+    }
+
+    .register-right {
+        padding: 2rem 1.5rem;
+    }
+
+    .school-stats {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .splash-logo-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+
+    .splash-logo {
+        width: 65px;
+        height: 65px;
+    }
+
+    .splash-title {
+        font-size: 1.5rem;
+    }
+
+    .splash-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .register-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .school-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .school-logo-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .school-content h2 {
+        font-size: 1.3rem;
+    }
+
+    .school-motto span {
+        font-size: 0.7rem;
+    }
+
+    .stat-number {
+        font-size: 1.2rem;
+    }
+
+    .input-hint {
+        font-size: 0.55rem;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.text-center {
+    text-align: center;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
