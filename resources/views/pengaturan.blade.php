@@ -50,7 +50,7 @@
                     </button>
                 </div>
 
-                <!-- Settings Forms (Right Content) -->
+                <!-- Settings Formss (Right Content) -->
                 <div class="settings-content">
                     @if(session('success'))
                         <div class="alert alert-success">

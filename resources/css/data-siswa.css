@@ -76,23 +76,28 @@ body {
 }
 
 .brand-icon {
-    width: 40px;          /* Ukuran kotak logo */
-    height: 40px;         /* Ukuran kotak logo */
+    width: 40px;
+    /* Ukuran kotak logo */
+    height: 40px;
+    /* Ukuran kotak logo */
     background: rgba(255, 255, 255, 0.12);
-    border-radius: 10px;  /* Lebih kecil dari sebelumnya */
+    border-radius: 10px;
+    /* Lebih kecil dari sebelumnya */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     flex-shrink: 0;
-    padding: 4px;         /* Padding agar logo tidak mepet */
+    padding: 4px;
+    /* Padding agar logo tidak mepet */
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .brand-logo {
     width: 100%;
     height: 100%;
-    object-fit: contain;  /* Menjaga proporsi logo */
+    object-fit: contain;
+    /* Menjaga proporsi logo */
     border-radius: 6px;
 }
 
@@ -445,7 +450,8 @@ body {
     gap: 0.5rem;
 }
 
-.btn-add, .btn-export {
+.btn-add,
+.btn-export {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 8px;
@@ -545,7 +551,8 @@ body {
 }
 
 /* Action Buttons */
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
     padding: 0.25rem 0.5rem;
     border: none;
     border-radius: 6px;
@@ -654,6 +661,7 @@ body {
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -760,7 +768,8 @@ textarea.form-input {
     border-top: 1px solid var(--border-color);
 }
 
-.btn-cancel, .btn-save {
+.btn-cancel,
+.btn-save {
     padding: 0.6rem 1.5rem;
     border: none;
     border-radius: 8px;
@@ -788,6 +797,59 @@ textarea.form-input {
 .btn-save:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* ========================================
+   BUTTONS & ACTIONS
+   ======================================== */
+.btn-primary-custom {
+    background-color: #4F46E5;
+    /* Warna biru keunguan */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s ease-in-out, transform 0.1s;
+    text-decoration: none;
+}
+
+.btn-primary-custom:hover {
+    background-color: #4338CA;
+}
+
+.btn-primary-custom:active {
+    transform: scale(0.98);
+}
+
+.btn-reset {
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-reset:hover {
+    background-color: var(--border-color);
+    color: var(--text-primary);
 }
 
 /* ========================================
@@ -819,7 +881,7 @@ textarea.form-input {
         transform: translateX(-100%);
         width: 280px;
     }
-    
+
     .sidebar.open {
         transform: translateX(0);
     }
