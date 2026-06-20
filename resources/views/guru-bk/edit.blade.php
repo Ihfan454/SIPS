@@ -10,23 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     @vite(['resources/css/dashboard.css', 'resources/js/guru-bk.js'])
-    
-    <style>
-        .form-section { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin: 20px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
-        .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; font-size: 14px; box-sizing: border-box; }
-        .form-control:focus { border-color: #4e73df; outline: none; box-shadow: 0 0 0 0.2rem rgba(78,115,223,.25); }
-        .row { display: flex; gap: 20px; flex-wrap: wrap; }
-        .col-md-6 { flex: 1; min-width: 300px; }
-        .text-danger { color: #e74a3b; font-size: 13px; margin-top: 5px; display: block; }
-        .form-actions { display: flex; justify-content: flex-end; gap: 15px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
-        .btn { padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 500; border: none; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-secondary { background-color: #858796; color: white; }
-        .btn-secondary:hover { background-color: #717384; }
-        .btn-primary { background-color: #4e73df; color: white; }
-        .btn-primary:hover { background-color: #2e59d9; }
-    </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -52,8 +35,8 @@
 
             <div class="form-section">
                 <div style="margin-bottom: 25px;">
-                    <h3 style="color: #4e73df; margin-bottom: 5px;"><i class="fas fa-user-edit"></i> Formulir Edit Akun Guru BK</h3>
-                    <p style="color: #666; font-size: 14px;">Silakan perbarui data akun Guru BK atau administrator di bawah ini.</p>
+                    <h3 class="page-heading"><i class="fas fa-user-edit"></i> Formulir Edit Akun Guru BK</h3>
+                    <p class="page-subtitle" style="margin-bottom: 25px;">Silakan perbarui data akun Guru BK atau administrator di bawah ini.</p>
                 </div>
 
                 <form action="{{ route('guru-bk.update', $guru->id) }}" method="POST">
@@ -80,7 +63,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nuptk">NUPTK <small style="color: #858796;">(16 Digit - Opsional)</small></label>
+                                <label for="nuptk">NUPTK <small class="text-muted">(16 Digit - Opsional)</small></label>
                                 <input type="text" class="form-control" id="nuptk" name="nuptk" value="{{ old('nuptk', $guru->nuptk) }}" placeholder="Masukkan 16 digit NUPTK" maxlength="16">
                                 @error('nuptk') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -99,8 +82,8 @@
                         </div>
                     </div>
 
-                    <div style="background-color: #f8f9fc; border: 1px solid #eaecf4; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-                        <h4 style="margin: 0 0 10px 0; color: #4e73df; font-size: 14px;"><i class="fas fa-key"></i> Ubah Password <small style="color: #858796; font-weight: normal;">(Kosongkan jika tidak ingin diubah)</small></h4>
+                    <div class="password-box">
+                        <h4><i class="fas fa-key"></i> Ubah Password <small class="text-muted" style="font-weight: normal;">(Kosongkan jika tidak ingin diubah)</small></h4>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group" style="margin-bottom: 0;">

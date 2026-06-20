@@ -22,6 +22,19 @@ const badgeColor = {
     Berat:  '#ef4444',
 };
 
+function getThemeColors() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+        bgCard: isDark ? '#1e293b' : '#ffffff',
+        textPrimary: isDark ? '#f8fafc' : '#1e293b',
+        textSecondary: isDark ? '#94a3b8' : '#64748b',
+        textMuted: isDark ? '#64748b' : '#94a3b8',
+        border: isDark ? '#334155' : '#e2e8f0',
+        bgFooter: isDark ? '#0f172a' : '#f8f9fc',
+        accent: isDark ? '#60a5fa' : '#4e73df',
+    };
+}
+
 // ─────────────────────────────────────────────
 // DOM Helpers
 // ─────────────────────────────────────────────
@@ -74,9 +87,10 @@ function showToast(item) {
     })();
 
     const color = badgeColor[item.kategori] || '#10b981';
+    const theme = getThemeColors();
     const toast = document.createElement('div');
     toast.style.cssText = `
-        background: white;
+        background: ${theme.bgCard};
         border-radius: 10px;
         padding: 14px 16px;
         box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -92,16 +106,16 @@ function showToast(item) {
         <div style="display:flex; align-items:flex-start; gap:10px;">
             <div style="width:10px; height:10px; border-radius:50%; background:${color}; flex-shrink:0; margin-top:3px;"></div>
             <div style="flex:1; min-width:0;">
-                <div style="font-weight:700; color:#1e293b; margin-bottom:2px;">
+                <div style="font-weight:700; color:${theme.textPrimary}; margin-bottom:2px;">
                     🔔 Pelanggaran Baru Masuk!
                 </div>
-                <div style="color:#4e73df; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <div style="color:${theme.accent}; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                     ${item.siswa} (${item.kelas})
                 </div>
-                <div style="color:#64748b; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <div style="color:${theme.textSecondary}; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                     ${item.pelanggaran}
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:11px; color:#94a3b8;">
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:11px; color:${theme.textMuted};">
                     <span>${item.tanggal} • ${item.waktu}</span>
                     <span style="font-weight:700; color:#ef4444;">+${item.poin} Poin</span>
                 </div>
@@ -175,11 +189,12 @@ function injectStyles() {
 // ─────────────────────────────────────────────
 
 function renderDropdown(list, container) {
+    const theme = getThemeColors();
     container.innerHTML = '';
 
     if (!list || list.length === 0) {
         container.innerHTML = `
-            <div style="padding:24px 16px; text-align:center; color:#94a3b8; font-size:13px;">
+            <div style="padding:24px 16px; text-align:center; color:${theme.textMuted}; font-size:13px;">
                 <i class="fas fa-bell-slash" style="font-size:24px; margin-bottom:8px; display:block; opacity:0.5;"></i>
                 Belum ada pelanggaran hari ini
             </div>`;
@@ -191,24 +206,24 @@ function renderDropdown(list, container) {
         const div = document.createElement('div');
         div.style.cssText = `
             padding: 12px 16px;
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid ${theme.border};
             cursor: pointer;
             transition: background 0.15s;
             font-size: 13px;
         `;
-        div.addEventListener('mouseenter', () => div.style.backgroundColor = '#f8fafc');
+        div.addEventListener('mouseenter', () => div.style.backgroundColor = theme.bgFooter);
         div.addEventListener('mouseleave', () => div.style.backgroundColor = 'transparent');
         div.innerHTML = `
             <div style="display:flex; gap:10px; align-items:flex-start;">
                 <div style="width:9px; height:9px; border-radius:50%; background:${color}; margin-top:4px; flex-shrink:0;"></div>
                 <div style="flex:1; min-width:0;">
-                    <strong style="color:#4e73df; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                        ${item.siswa} <span style="color:#94a3b8; font-weight:400;">(${item.kelas})</span>
+                    <strong style="color:${theme.accent}; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        ${item.siswa} <span style="color:${theme.textMuted}; font-weight:400;">(${item.kelas})</span>
                     </strong>
-                    <div style="color:#64748b; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    <div style="color:${theme.textSecondary}; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                         ${item.pelanggaran}
                     </div>
-                    <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:11px; color:#94a3b8;">
+                    <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:11px; color:${theme.textMuted};">
                         <span><i class="fas fa-clock" style="margin-right:3px;"></i>${item.waktu} • ${item.tanggal}</span>
                         <span style="font-weight:700; color:#ef4444; font-size:12px;">+${item.poin} Poin</span>
                     </div>
@@ -302,6 +317,7 @@ function buildDropdown(notifEl) {
     const old = notifEl.querySelector('.notification-dropdown');
     if (old) old.remove();
 
+    const theme = getThemeColors();
     const dropdown = document.createElement('div');
     dropdown.className = 'notification-dropdown';
     dropdown.style.cssText = `
@@ -309,10 +325,10 @@ function buildDropdown(notifEl) {
         top: calc(100% + 8px);
         right: 0;
         width: 340px;
-        background: white;
+        background: ${theme.bgCard};
         border-radius: 12px;
         box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
-        border: 1px solid #e2e8f0;
+        border: 1px solid ${theme.border};
         display: none;
         z-index: 1050;
         overflow: hidden;
@@ -342,12 +358,13 @@ function buildDropdown(notifEl) {
 
     // Live indicator
     const liveBar = document.createElement('div');
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     liveBar.style.cssText = `
         padding: 6px 16px;
-        background: #f0fdf4;
-        border-bottom: 1px solid #dcfce7;
+        background: ${isDark ? 'rgba(34, 197, 94, 0.1)' : '#f0fdf4'};
+        border-bottom: 1px solid ${isDark ? 'rgba(34, 197, 94, 0.2)' : '#dcfce7'};
         font-size: 11px;
-        color: #16a34a;
+        color: ${isDark ? '#4ade80' : '#16a34a'};
         display: flex;
         align-items: center;
         gap: 6px;
@@ -375,7 +392,7 @@ function buildDropdown(notifEl) {
     list.id = 'sips-notif-list';
     list.style.cssText = 'max-height: 300px; overflow-y: auto;';
     list.innerHTML = `
-        <div style="padding:24px 16px; text-align:center; color:#94a3b8; font-size:13px;">
+        <div style="padding:24px 16px; text-align:center; color:${theme.textMuted}; font-size:13px;">
             <i class="fas fa-spinner fa-spin" style="margin-bottom:8px; display:block;"></i>
             Memuat...
         </div>`;
@@ -386,11 +403,11 @@ function buildDropdown(notifEl) {
     footer.style.cssText = `
         padding: 10px 16px;
         text-align: center;
-        border-top: 1px solid #f1f5f9;
-        background: #f8fafc;
+        border-top: 1px solid ${theme.border};
+        background: ${theme.bgFooter};
     `;
     footer.innerHTML = `
-        <a href="/pelanggaran" style="color:#4e73df; text-decoration:none; font-size:12px; font-weight:600;">
+        <a href="/pelanggaran" style="color:${theme.accent}; text-decoration:none; font-size:12px; font-weight:600;">
             <i class="fas fa-list"></i> Lihat Semua Pelanggaran
         </a>`;
     dropdown.appendChild(footer);

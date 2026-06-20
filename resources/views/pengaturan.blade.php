@@ -10,37 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     @vite(['resources/css/dashboard.css', 'resources/js/pengaturan.js'])
-    
-    <style>
-        .settings-container { display: flex; gap: 25px; margin: 20px; flex-wrap: wrap; }
-        .settings-sidebar { width: 250px; display: flex; flex-direction: column; gap: 10px; }
-        .settings-content { flex: 1; min-width: 320px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
-        .tab-btn { display: flex; align-items: center; gap: 12px; padding: 14px 20px; background: white; border: 1px solid #e5e7eb; border-radius: 6px; font-weight: 500; color: #4b5563; cursor: pointer; text-align: left; transition: all 0.2s; font-size: 14px; }
-        .tab-btn:hover { background-color: #f9fafb; color: #4e73df; }
-        .tab-btn.active { background-color: #4e73df; color: white; border-color: #4e73df; }
-        
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
-
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #374151; font-size: 14px; }
-        .form-control { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-family: inherit; font-size: 14px; box-sizing: border-box; }
-        .form-control:focus { border-color: #4e73df; outline: none; box-shadow: 0 0 0 0.2rem rgba(78,115,223,.25); }
-        .row { display: flex; gap: 20px; flex-wrap: wrap; }
-        .col-md-6 { flex: 1; min-width: 280px; }
-        
-        .profile-upload-area { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; background: #f9fafb; padding: 20px; border-radius: 6px; border: 1px dashed #d1d5db; }
-        .profile-preview { width: 90px; height: 90px; border-radius: 50%; overflow: hidden; background: #eaecf4; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #4e73df; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .profile-preview img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .btn-save { background-color: #4e73df; color: white; padding: 10px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-save:hover { background-color: #2e59d9; }
-        
-        .text-danger { color: #e74a3b; font-size: 13px; margin-top: 5px; display: block; }
-        .alert { padding: 15px; border-radius: 5px; margin-bottom: 20px; color: white; }
-        .alert-success { background-color: #1cc88a; }
-    </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -91,8 +60,8 @@
 
                     <!-- Tab 1: Profil Saya -->
                     <div class="tab-panel active" id="tab-profile">
-                        <h3 style="color: #4e73df; font-weight: 600; margin-bottom: 5px;"><i class="fas fa-user-edit"></i> Edit Profil Saya</h3>
-                        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">Ubah data informasi pribadi dan foto profil Anda di sini.</p>
+                        <h3 class="page-heading"><i class="fas fa-user-edit"></i> Edit Profil Saya</h3>
+                        <p class="page-subtitle">Ubah data informasi pribadi dan foto profil Anda di sini.</p>
 
                         <form action="{{ route('pengaturan.profile') }}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -106,9 +75,9 @@
                                     @endif
                                 </div>
                                 <div style="display:flex; flex-direction:column; gap: 8px;">
-                                    <label for="foto" style="font-weight: 600; color: #4b5563; font-size: 13px;">Unggah Foto Baru</label>
+                                    <label for="foto" class="upload-label">Unggah Foto Baru</label>
                                     <input type="file" id="foto" name="foto" accept="image/*" style="font-size: 13px;">
-                                    <small style="color: #858796;">Rekomendasi ukuran square/kotak, Maksimal 2MB (JPG, PNG, SVG)</small>
+                                    <small class="text-muted">Rekomendasi ukuran square/kotak, Maksimal 2MB (JPG, PNG, SVG)</small>
                                     @error('foto') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
@@ -133,7 +102,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="nuptk">NUPTK <small style="color: #858796;">(16 Digit - Opsional)</small></label>
+                                        <label for="nuptk">NUPTK <small class="text-muted">(16 Digit - Opsional)</small></label>
                                         <input type="text" class="form-control" id="nuptk" name="nuptk" value="{{ old('nuptk', $user->nuptk) }}" placeholder="16 digit NUPTK" maxlength="16">
                                         @error('nuptk') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
@@ -161,8 +130,8 @@
 
                     <!-- Tab 2: Sandi / Keamanan -->
                     <div class="tab-panel" id="tab-password">
-                        <h3 style="color: #4e73df; font-weight: 600; margin-bottom: 5px;"><i class="fas fa-key"></i> Ganti Password</h3>
-                        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">Demi keamanan akun, silakan ganti password Anda secara berkala.</p>
+                        <h3 class="page-heading"><i class="fas fa-key"></i> Ganti Password</h3>
+                        <p class="page-subtitle">Demi keamanan akun, silakan ganti password Anda secara berkala.</p>
 
                         <form action="{{ route('pengaturan.password') }}" method="POST">
                             @csrf
@@ -197,8 +166,8 @@
 
                     <!-- Tab 3: Pengaturan Instansi Sekolah -->
                     <div class="tab-panel" id="tab-aplikasi">
-                        <h3 style="color: #4e73df; font-weight: 600; margin-bottom: 5px;"><i class="fas fa-university"></i> Identitas Sekolah / Instansi</h3>
-                        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">Sesuaikan identitas sekolah yang akan tampil di kop surat cetak laporan pelanggaran.</p>
+                        <h3 class="page-heading"><i class="fas fa-university"></i> Identitas Sekolah / Instansi</h3>
+                        <p class="page-subtitle">Sesuaikan identitas sekolah yang akan tampil di kop surat cetak laporan pelanggaran.</p>
 
                         <form action="{{ route('pengaturan.aplikasi') }}" method="POST">
                             @csrf

@@ -3,6 +3,8 @@
    SMP Negeri 7 Jember
    ======================================== */
 
+@import './pages.css';
+
 :root {
     --bg-primary: #f0f4f8;
     --bg-card: #ffffff;
@@ -237,7 +239,7 @@ body {
     background: none;
     border: none;
     font-size: 1.2rem;
-    color: #1e293b;
+    color: var(--text-primary);
     cursor: pointer;
 }
 
@@ -468,12 +470,13 @@ body {
 }
 
 .btn-export {
-    background: #f1f5f9;
-    color: #64748b;
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
 }
 
 .btn-export:hover {
-    background: #e2e8f0;
+    background: var(--border-color);
 }
 
 /* ========================================
@@ -607,7 +610,7 @@ body {
 }
 
 .page-btn:hover:not(:disabled) {
-    background: #f1f5f9;
+    background: var(--bg-input);
     border-color: #3b82f6;
     color: #3b82f6;
 }
@@ -692,7 +695,7 @@ body {
 }
 
 .modal-close:hover {
-    color: #1e293b;
+    color: var(--text-primary);
 }
 
 .modal-body {
@@ -774,7 +777,7 @@ textarea.form-input {
 }
 
 .btn-cancel:hover {
-    background: #e2e8f0;
+    background: var(--border-color);
 }
 
 .btn-save {

@@ -10,22 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     @vite(['resources/css/dashboard.css', 'resources/js/guru-bk.js'])
-    
-    <style>
-        .btn-action { padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 14px; margin-right: 5px; display: inline-block; }
-        .btn-tambah { background-color: #4e73df; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-tambah:hover { background-color: #2e59d9; color: white; }
-        .btn-edit { background-color: #f6c23e; color: #fff; }
-        .btn-delete { background-color: #e74a3b; color: #fff; border: none; cursor: pointer; }
-        .badge-status { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; display: inline-block; }
-        .badge-status-aktif { background-color: #d1e7dd; color: #0f5132; }
-        .badge-status-nonaktif { background-color: #f8d7da; color: #842029; }
-        .section-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin: 20px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .alert { padding: 15px; border-radius: 5px; margin-bottom: 20px; color: white; }
-        .alert-success { background-color: #1cc88a; }
-        .alert-error { background-color: #e74a3b; }
-    </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -50,8 +34,8 @@
             </header>
 
             <section class="section-card">
-                <div class="card-header">
-                    <h3 style="color: #4e73df; font-weight: 600;"><i class="fas fa-users-cog"></i> Daftar Akun Guru BK / Admin</h3>
+                <div class="report-header">
+                    <h3 class="page-heading"><i class="fas fa-users-cog"></i> Daftar Akun Guru BK / Admin</h3>
                     <a href="{{ route('guru-bk.create') }}" class="btn-tambah">
                         <i class="fas fa-user-plus"></i> Tambah Guru BK
                     </a>
@@ -88,7 +72,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $guru->nuptk ?? '-' }}</td>
-                                <td style="font-weight: 600; color: #4e73df;">{{ $guru->name }}</td>
+                                <td class="text-accent" style="font-weight: 600;">{{ $guru->name }}</td>
                                 <td>{{ $guru->email }}</td>
                                 <td>{{ $guru->jabatan ?? '-' }}</td>
                                 <td>{{ $guru->no_hp ?? '-' }}</td>
@@ -111,7 +95,7 @@
                                         </button>
                                     </form>
                                     @else
-                                    <button class="btn-action" style="background-color: #dddfeb; color: #858796; cursor: not-allowed; border: none;" title="Akun sedang digunakan" disabled>
+                                    <button class="btn-action btn-disabled" title="Akun sedang digunakan" disabled>
                                         <i class="fas fa-trash"></i>
                                     </button>
                                     @endif
@@ -119,7 +103,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="8" style="text-align: center; padding: 20px;">Belum ada data Guru BK yang terdaftar.</td>
+                                <td colspan="8" class="text-center" style="padding: 20px;">Belum ada data Guru BK yang terdaftar.</td>
                             </tr>
                             @endforelse
                         </tbody>

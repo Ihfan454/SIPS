@@ -3,6 +3,8 @@
    SMP Negeri 7 Jember
    ======================================== */
 
+@import './pages.css';
+
 :root {
     --bg-primary: #f0f4f8;
     --bg-card: #ffffff;
@@ -235,7 +237,7 @@ body {
     background: none;
     border: none;
     font-size: 1.2rem;
-    color: #1e293b;
+    color: var(--text-primary);
     cursor: pointer;
 }
 
@@ -258,7 +260,7 @@ body {
 
 .notification i {
     font-size: 1.2rem;
-    color: #64748b;
+    color: var(--text-secondary);
 }
 
 .notification .badge {
@@ -365,7 +367,7 @@ body {
 .stat-info h3 {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #64748b;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -441,20 +443,22 @@ body {
     border-radius: 6px;
     font-size: 0.65rem;
     font-weight: 500;
-    background: #f1f5f9;
-    color: #64748b;
+    background: var(--bg-input);
+    color: var(--text-secondary);
     cursor: pointer;
     font-family: 'Inter', sans-serif;
     transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
 }
 
 .chart-btn.active {
     background: #3b82f6;
     color: white;
+    border-color: #3b82f6;
 }
 
 .chart-btn:hover:not(.active) {
-    background: #e2e8f0;
+    background: var(--border-color);
 }
 
 .chart-body {
@@ -542,23 +546,38 @@ body {
 }
 
 .badge-status.selesai {
+    background: rgba(28, 200, 138, 0.15);
+    color: #6ee7b7;
+}
+
+.badge-status.proses {
+    background: rgba(246, 194, 62, 0.15);
+    color: #fcd34d;
+}
+
+.badge-status.menunggu {
+    background: rgba(231, 74, 59, 0.15);
+    color: #fca5a5;
+}
+
+[data-theme="light"] .badge-status.selesai {
     background: #dcfce7;
     color: #166534;
 }
 
-.badge-status.proses {
+[data-theme="light"] .badge-status.proses {
     background: #fef3c7;
     color: #92400e;
 }
 
-.badge-status.menunggu {
+[data-theme="light"] .badge-status.menunggu {
     background: #fee2e2;
     color: #991b1b;
 }
 
 .badge-ringan {
-    background: #d9f99d;
-    color: #3a6210;
+    background: rgba(28, 200, 138, 0.15);
+    color: #6ee7b7;
     padding: 0.2rem 0.6rem;
     border-radius: 9999px;
     font-size: 0.6rem;
@@ -566,8 +585,8 @@ body {
 }
 
 .badge-sedang {
-    background: #fed7aa;
-    color: #9b4a0b;
+    background: rgba(246, 194, 62, 0.15);
+    color: #fcd34d;
     padding: 0.2rem 0.6rem;
     border-radius: 9999px;
     font-size: 0.6rem;
@@ -575,12 +594,27 @@ body {
 }
 
 .badge-berat {
-    background: #fecaca;
-    color: #b91c1c;
+    background: rgba(231, 74, 59, 0.15);
+    color: #fca5a5;
     padding: 0.2rem 0.6rem;
     border-radius: 9999px;
     font-size: 0.6rem;
     font-weight: 600;
+}
+
+[data-theme="light"] .badge-ringan {
+    background: #d9f99d;
+    color: #3a6210;
+}
+
+[data-theme="light"] .badge-sedang {
+    background: #fed7aa;
+    color: #9b4a0b;
+}
+
+[data-theme="light"] .badge-berat {
+    background: #fecaca;
+    color: #b91c1c;
 }
 
 .badge-kategori {

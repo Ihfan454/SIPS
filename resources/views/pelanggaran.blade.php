@@ -10,19 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     @vite(['resources/css/dashboard.css', 'resources/js/pelanggaran.js'])
-    
-    <style>
-        /* Sedikit tambahan CSS agar tombolnya rapi */
-        .btn-action { padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 14px; margin-right: 5px; display: inline-block; }
-        .btn-tambah { background-color: #4e73df; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: 500; }
-        .btn-tambah:hover { background-color: #2e59d9; color: white; }
-        .btn-edit { background-color: #f6c23e; color: #fff; }
-        .btn-delete { background-color: #e74a3b; color: #fff; border: none; cursor: pointer; }
-        .badge-kategori { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: capitalize; display: inline-block; }
-        .badge-kategori-ringan { background-color: #d1e7dd; color: #0f5132; }
-        .badge-kategori-sedang { background-color: #fff3cd; color: #664d03; }
-        .badge-kategori-berat { background-color: #f8d7da; color: #842029; }
-    </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -50,8 +37,8 @@
                 </div>
             </header>
 
-            <section class="recent-section" style="margin: 20px;">
-                <div class="recent-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <section class="recent-section page-section-margin">
+                <div class="report-header">
                     <h3><i class="fas fa-exclamation-triangle"></i> Daftar Pelanggaran Siswa</h3>
                     <a href="{{ route('pelanggaran.create') }}" class="btn-tambah">
                         <i class="fas fa-plus"></i> Catat Pelanggaran
@@ -59,8 +46,8 @@
                 </div>
 
                 @if(session('success'))
-                    <div style="background-color: #1cc88a; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-                        {{ session('success') }}
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> {{ session('success') }}
                     </div>
                 @endif
 
@@ -91,8 +78,8 @@
                                         {{ $item->kategori ?? '-' }}
                                     </span>
                                 </td>
-                                <td style="color: #e74a3b; font-weight: bold;">+{{ $item->poin ?? 0 }}</td>
-                                <td style="text-align: center;">
+                                <td class="text-poin">+{{ $item->poin ?? 0 }}</td>
+                                <td class="text-center">
                                     <a href="{{ route('pelanggaran.edit', $item->id ?? 1) }}" class="btn-action btn-edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -107,7 +94,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="8" style="text-align: center; padding: 20px;">Belum ada data pelanggaran yang tercatat.</td>
+                                <td colspan="8" class="text-center" style="padding: 20px;">Belum ada data pelanggaran yang tercatat.</td>
                             </tr>
                             @endforelse
                         </tbody>
