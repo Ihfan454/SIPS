@@ -13,10 +13,23 @@ class DashboardController extends Controller
 {
     public function stats(): JsonResponse
     {
-        $totalSiswa = Siswa::count();
-        $totalPelanggaran = Pelanggaran::count();
-        $totalSelesai = Pelanggaran::where('status', 'selesai')->count();
-        $totalProses = Pelanggaran::where('status', 'proses')->count();
+        $isWali = auth()->user()->isWaliKelas();
+        $classId = auth()->user()->class_id;
+
+        $siswaQuery = Siswa::query();
+        $pelanggaranQuery = Pelanggaran::query();
+
+        if ($isWali) {
+            $siswaQuery->where('class_id', $classId);
+            $pelanggaranQuery->whereHas('siswa', fn($q) => $q->where('class_id', $classId));
+        }
+
+        $totalSiswa = $siswaQuery->count();
+        $totalPelanggaran = $pelanggaranQuery->count();
+        
+        // clone query to prevent cumulative condition
+        $totalSelesai = (clone $pelanggaranQuery)->where('status', 'selesai')->count();
+        $totalProses = (clone $pelanggaranQuery)->where('status', 'proses')->count();
 
         return response()->json([
             'total_siswa' => $totalSiswa,
@@ -28,8 +41,16 @@ class DashboardController extends Controller
 
     public function recent(): JsonResponse
     {
-        $pelanggarans = Pelanggaran::with('siswa')
-            ->latest('tanggal_pelanggaran')
+        $isWali = auth()->user()->isWaliKelas();
+        $classId = auth()->user()->class_id;
+
+        $query = Pelanggaran::with('siswa');
+
+        if ($isWali) {
+            $query->whereHas('siswa', fn($q) => $q->where('class_id', $classId));
+        }
+
+        $pelanggarans = $query->latest('tanggal_pelanggaran')
             ->latest('created_at')
             ->limit(10)
             ->get()
@@ -53,9 +74,17 @@ class DashboardController extends Controller
      */
     public function notificationsToday(Request $request): JsonResponse
     {
+        $isWali = auth()->user()->isWaliKelas();
+        $classId = auth()->user()->class_id;
+
         $query = Pelanggaran::with('siswa')
-            ->whereDate('created_at', today())
-            ->latest('id');
+            ->whereDate('created_at', today());
+
+        if ($isWali) {
+            $query->whereHas('siswa', fn($q) => $q->where('class_id', $classId));
+        }
+
+        $query->latest('id');
 
         // Jika client mengirim after_id, hanya kembalikan data yang lebih baru
         if ($request->filled('after_id')) {
@@ -73,8 +102,15 @@ class DashboardController extends Controller
             'tanggal'     => $p->created_at->format('d/m/Y'),
         ]);
 
-        $latestId = Pelanggaran::whereDate('created_at', today())->max('id') ?? 0;
-        $totalToday = Pelanggaran::whereDate('created_at', today())->count();
+        $latestQuery = Pelanggaran::whereDate('created_at', today());
+        $countQuery = Pelanggaran::whereDate('created_at', today());
+        if ($isWali) {
+            $latestQuery->whereHas('siswa', fn($q) => $q->where('class_id', $classId));
+            $countQuery->whereHas('siswa', fn($q) => $q->where('class_id', $classId));
+        }
+
+        $latestId = $latestQuery->max('id') ?? 0;
+        $totalToday = $countQuery->count();
 
         return response()->json([
             'data'      => $items,
@@ -85,7 +121,18 @@ class DashboardController extends Controller
 
     public function charts(): JsonResponse
     {
-        $byJenis = Pelanggaran::select('jenis_pelanggaran', DB::raw('count(*) as frekuensi'))
+        $isWali = auth()->user()->isWaliKelas();
+        $classId = auth()->user()->class_id;
+
+        $jenisQuery = Pelanggaran::query();
+        $kategoriQuery = Pelanggaran::query();
+
+        if ($isWali) {
+            $jenisQuery->whereHas('siswa', fn($q) => $q->where('class_id', $classId));
+            $kategoriQuery->whereHas('siswa', fn($q) => $q->where('class_id', $classId));
+        }
+
+        $byJenis = $jenisQuery->select('jenis_pelanggaran', DB::raw('count(*) as frekuensi'))
             ->groupBy('jenis_pelanggaran')
             ->orderByDesc('frekuensi')
             ->limit(10)
@@ -95,7 +142,7 @@ class DashboardController extends Controller
                 'frekuensi' => (int) $row->frekuensi,
             ]);
 
-        $byKategori = Pelanggaran::select('kategori', DB::raw('count(*) as total'))
+        $byKategori = $kategoriQuery->select('kategori', DB::raw('count(*) as total'))
             ->groupBy('kategori')
             ->get()
             ->mapWithKeys(fn ($row) => [$row->kategori => (int) $row->total]);

@@ -12,6 +12,9 @@
     
     <!-- Vite Assets -->
     @vite(['resources/css/data-siswa.css', 'resources/js/data-siswa.js'])
+    <script>
+        window.userCanCRUD = {{ (auth()->user()->isAdminBK() || auth()->user()->isGuruBK()) ? 'true' : 'false' }};
+    </script>
 </head>
 <body>
     <!-- Overlay untuk mobile -->
@@ -103,9 +106,11 @@
                     </div>
                 </div>
                 <div class="filter-right">
+                    @if(auth()->user()->isAdminBK() || auth()->user()->isGuruBK())
                     <button class="btn-add" id="btnTambahSiswa">
                         <i class="fas fa-plus"></i> Tambah Siswa
                     </button>
+                    @endif
                     <button class="btn-export">
                         <i class="fas fa-file-export"></i> Export
                     </button>

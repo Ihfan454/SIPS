@@ -33,10 +33,12 @@
             <i class="fas fa-chart-line"></i>
             <span>Laporan</span>
         </a>
+        @if(auth()->user()->isAdminBK())
         <a href="{{ route('guru-bk.index') }}" class="nav-item {{ request()->routeIs('guru-bk.*') ? 'active' : '' }}">
             <i class="fas fa-users"></i>
-            <span>Guru BK</span>
+            <span>Manajemen User</span>
         </a>
+        @endif
         <a href="{{ route('pengaturan') }}" class="nav-item {{ request()->routeIs('pengaturan') ? 'active' : '' }}">
             <i class="fas fa-cog"></i>
             <span>Pengaturan</span>
@@ -68,7 +70,19 @@
                 @endif
             </div>
             <div class="user-name">{{ auth()->user()->name }}</div>
-            <small>{{ auth()->user()->jabatan ?? 'Guru BK' }}</small>
+            <small>
+                @if(auth()->user()->isAdminBK())
+                    Admin BK
+                @elseif(auth()->user()->isGuruBK())
+                    Guru BK
+                @elseif(auth()->user()->isWaliKelas())
+                    Wali Kelas {{ auth()->user()->kelas ? auth()->user()->kelas->nama : '' }}
+                @elseif(auth()->user()->isKepalaSekolah())
+                    Kepala Sekolah
+                @else
+                    {{ auth()->user()->jabatan ?? 'Pengguna' }}
+                @endif
+            </small>
         </div>
     </div>
 </aside>

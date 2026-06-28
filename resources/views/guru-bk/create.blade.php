@@ -69,6 +69,33 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label for="role">Peran / Hak Akses <span class="text-danger" style="display:inline;">*</span></label>
+                                <select class="form-control" id="role" name="role" required onchange="toggleKelasField()">
+                                    <option value="admin_bk" {{ old('role') == 'admin_bk' ? 'selected' : '' }}>Admin BK (Administrator)</option>
+                                    <option value="guru_bk" {{ old('role', 'guru_bk') == 'guru_bk' ? 'selected' : '' }}>Guru BK</option>
+                                    <option value="wali_kelas" {{ old('role') == 'wali_kelas' ? 'selected' : '' }}>Wali Kelas</option>
+                                    <option value="kepala_sekolah" {{ old('role') == 'kepala_sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                                </select>
+                                @error('role') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6" id="kelasField" style="display: none;">
+                            <div class="form-group">
+                                <label for="class_id">Kelas Diampu <span class="text-danger" style="display:inline;">*</span></label>
+                                <select class="form-control" id="class_id" name="class_id">
+                                    <option value="">Pilih Kelas</option>
+                                    @foreach($list_kelas as $kelas)
+                                        <option value="{{ $kelas->id }}" {{ old('class_id') == $kelas->id ? 'selected' : '' }}>{{ $kelas->nama }}</option>
+                                    @endforeach
+                                </select>
+                                @error('class_id') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label for="jabatan">Jabatan <span class="text-danger" style="display:inline;">*</span></label>
                                 <select class="form-control" id="jabatan" name="jabatan" required>
                                     <option value="Guru BK" {{ old('jabatan') == 'Guru BK' ? 'selected' : '' }}>Guru BK / Konselor</option>
@@ -135,5 +162,20 @@
             </div>
         </main>
     </div>
+
+    <script>
+        function toggleKelasField() {
+            const roleSelect = document.getElementById('role');
+            const kelasField = document.getElementById('kelasField');
+            if (roleSelect.value === 'wali_kelas') {
+                kelasField.style.display = 'block';
+                document.getElementById('class_id').setAttribute('required', 'required');
+            } else {
+                kelasField.style.display = 'none';
+                document.getElementById('class_id').removeAttribute('required');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', toggleKelasField);
+    </script>
 </body>
 </html>

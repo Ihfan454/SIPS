@@ -17,6 +17,7 @@ class User extends Authenticatable
         'password',
         'nuptk',
         'role',
+        'class_id',
         'jabatan',
         'no_hp',
         'alamat',
@@ -38,16 +39,37 @@ class User extends Authenticatable
         ];
     }
 
+    // Relasi ke Kelas
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'class_id');
+    }
+
     // Relasi ke pelanggaran
     public function pelanggarans()
     {
         return $this->hasMany(Pelanggaran::class, 'user_id');
     }
 
-    // Helper (karena role hanya satu, bisa langsung return true)
+    // Helpers untuk role check
     public function isAdminBK()
     {
         return $this->role === 'admin_bk';
+    }
+
+    public function isGuruBK()
+    {
+        return $this->role === 'guru_bk';
+    }
+
+    public function isWaliKelas()
+    {
+        return $this->role === 'wali_kelas';
+    }
+
+    public function isKepalaSekolah()
+    {
+        return $this->role === 'kepala_sekolah';
     }
 
     // Scope untuk user aktif

@@ -40,9 +40,11 @@
             <section class="recent-section page-section-margin">
                 <div class="report-header">
                     <h3><i class="fas fa-exclamation-triangle"></i> Daftar Pelanggaran Siswa</h3>
+                    @if(auth()->user()->isAdminBK() || auth()->user()->isGuruBK())
                     <a href="{{ route('pelanggaran.create') }}" class="btn-tambah">
                         <i class="fas fa-plus"></i> Catat Pelanggaran
                     </a>
+                    @endif
                 </div>
 
                 @if(session('success'))
@@ -78,7 +80,8 @@
                                         {{ $item->kategori ?? '-' }}
                                     </span>
                                 </td>
-                                <td class="text-poin">+{{ $item->poin ?? 0 }}</td>
+                                <td>{{ $item->poin ?? 0 }}</td>
+                                @if(auth()->user()->isAdminBK() || auth()->user()->isGuruBK())
                                 <td class="text-center">
                                     <a href="{{ route('pelanggaran.edit', $item->id ?? 1) }}" class="btn-action btn-edit">
                                         <i class="fas fa-edit"></i>
@@ -91,6 +94,11 @@
                                         </button>
                                     </form>
                                 </td>
+                                @else
+                                <td class="text-center">
+                                    <span style="color:#94a3b8;font-size:0.75rem;">Read Only</span>
+                                </td>
+                                @endif
                             </tr>
                             @empty
                             <tr>

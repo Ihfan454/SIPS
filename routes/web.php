@@ -24,7 +24,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
 
     // ------------------------------------------
-    // RUTE DATA SISWA
+    // RUTE DATA SISWA (Halaman utama open untuk semua, data dibatasi via API)
     // ------------------------------------------
     Route::get('/data-siswa', function () {
         return view('data-siswa');
@@ -34,36 +34,45 @@ Route::middleware('auth')->group(function () {
     // RUTE PELANGGARAN
     // ------------------------------------------
     
-    // 1. Menampilkan daftar pelanggaran
+    // 1. Menampilkan daftar pelanggaran (Open untuk semua)
     Route::get('/pelanggaran', [PelanggaranController::class, 'index'])->name('pelanggaran');
 
-    // 2. Menampilkan form tambah pelanggaran baru (INI YANG DIPERBAIKI)
-    Route::get('/pelanggaran/create', [PelanggaranController::class, 'create'])->name('pelanggaran.create');
+    // CRUD Pelanggaran hanya untuk Admin BK dan Guru BK
+    Route::middleware('role:admin_bk,guru_bk')->group(function () {
+        // 2. Menampilkan form tambah pelanggaran baru
+        Route::get('/pelanggaran/create', [PelanggaranController::class, 'create'])->name('pelanggaran.create');
 
-    // 3. Menampilkan form edit pelanggaran
-    Route::get('/pelanggaran/{id}/edit', function ($id) {
-        return "Ini halaman untuk edit pelanggaran ID: " . $id;
-    })->name('pelanggaran.edit');
+        // 3. Menampilkan form edit pelanggaran
+        Route::get('/pelanggaran/{id}/edit', function ($id) {
+            return "Ini halaman untuk edit pelanggaran ID: " . $id;
+        })->name('pelanggaran.edit');
 
-    // 4. Proses hapus pelanggaran
-    Route::delete('/pelanggaran/{id}', function ($id) {
-        // Nantinya diisi logika hapus data
-    })->name('pelanggaran.destroy');
+        // 4. Proses hapus pelanggaran
+        Route::delete('/pelanggaran/{id}', function ($id) {
+            // Nantinya diisi logika hapus data
+        })->name('pelanggaran.destroy');
 
-    // 5. Proses menyimpan data pelanggaran baru (Pintu Penerima POST)
-    Route::post('/pelanggaran', [PelanggaranController::class, 'store'])->name('pelanggaran.store');
+        // 5. Proses menyimpan data pelanggaran baru (Pintu Penerima POST)
+        Route::post('/pelanggaran', [PelanggaranController::class, 'store'])->name('pelanggaran.store');
+    });
 
-    // 6. Halaman Laporan Pelanggaran
+    // 6. Halaman Laporan Pelanggaran (Semua role bisa lihat, Wali Kelas ter-scope)
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
 
-    // 7. Manajemen Guru BK
-    Route::resource('guru-bk', GuruBKController::class);
+    // 7. Manajemen Guru / Pengguna (Hanya Admin BK)
+    Route::middleware('role:admin_bk')->group(function () {
+        Route::resource('guru-bk', GuruBKController::class);
+    });
 
-    // 8. Pengaturan Lengkap (Profil, Password, Instansi)
+    // 8. Pengaturan Lengkap
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
     Route::post('/pengaturan/profile', [PengaturanController::class, 'updateProfile'])->name('pengaturan.profile');
     Route::post('/pengaturan/password', [PengaturanController::class, 'updatePassword'])->name('pengaturan.password');
-    Route::post('/pengaturan/aplikasi', [PengaturanController::class, 'updateAplikasi'])->name('pengaturan.aplikasi');
+    
+    // Hanya Admin yang bisa mengubah pengaturan aplikasi / instansi
+    Route::post('/pengaturan/aplikasi', [PengaturanController::class, 'updateAplikasi'])
+        ->middleware('role:admin_bk')
+        ->name('pengaturan.aplikasi');
 
     // ------------------------------------------
     // RUTE PROFILE (Bawaan Laravel Breeze)
@@ -73,7 +82,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // ------------------------------------------
-    // RUTE API
+    // RUTE API (Scoping internal)
     // ------------------------------------------
     Route::prefix('api')->group(function () {
         Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
@@ -84,9 +93,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/siswa/stats', [SiswaController::class, 'stats']);
         Route::get('/siswa/kelas', [SiswaController::class, 'kelas']);
         Route::get('/siswa', [SiswaController::class, 'index']);
-        Route::post('/siswa', [SiswaController::class, 'store']);
-        Route::put('/siswa/{siswa}', [SiswaController::class, 'update']);
-        Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy']);
+
+        // Write API only for Admin BK and Guru BK
+        Route::middleware('role:admin_bk,guru_bk')->group(function () {
+            Route::post('/siswa', [SiswaController::class, 'store']);
+            Route::put('/siswa/{siswa}', [SiswaController::class, 'update']);
+            Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy']);
+        });
     });
 });
 
