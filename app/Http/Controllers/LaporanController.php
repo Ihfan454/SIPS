@@ -17,16 +17,29 @@ class LaporanController extends Controller
         $kelas_selected = $request->input('kelas');
         $kategori_selected = $request->input('kategori');
 
-        // Ambil daftar kelas unik dari database siswa untuk dropdown filter
-        $list_kelas = Siswa::select('kelas')
-            ->whereNotNull('kelas')
-            ->where('kelas', '!=', '')
-            ->distinct()
-            ->orderBy('kelas', 'asc')
-            ->pluck('kelas');
+        // Batasi Wali Kelas
+        $isWali = auth()->user()->isWaliKelas();
+        $classId = auth()->user()->class_id;
+        $kelas_name = auth()->user()->kelas ? auth()->user()->kelas->nama : null;
+
+        if ($isWali) {
+            $kelas_selected = $kelas_name;
+        }
+
+        if ($isWali) {
+            $list_kelas = collect($kelas_name ? [$kelas_name] : []);
+        } else {
+            $list_kelas = \App\Models\Kelas::orderBy('nama', 'asc')->pluck('nama');
+        }
 
         // Query Pelanggaran
         $query = Pelanggaran::with('siswa');
+
+        if ($isWali) {
+            $query->whereHas('siswa', function ($q) use ($classId) {
+                $q->where('class_id', $classId);
+            });
+        }
 
         // Filter Rentang Tanggal
         if ($tanggal_mulai) {
@@ -36,8 +49,8 @@ class LaporanController extends Controller
             $query->whereDate('tanggal_pelanggaran', '<=', $tanggal_selesai);
         }
 
-        // Filter Kelas
-        if ($kelas_selected) {
+        // Filter Kelas (untuk non-wali kelas)
+        if (!$isWali && $kelas_selected) {
             $query->whereHas('siswa', function ($q) use ($kelas_selected) {
                 $q->where('kelas', $kelas_selected);
             });

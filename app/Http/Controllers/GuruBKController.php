@@ -11,13 +11,14 @@ class GuruBKController extends Controller
 {
     public function index()
     {
-        $guru_bk = User::where('role', 'admin_bk')->latest()->get();
+        $guru_bk = User::with('kelas')->latest()->get();
         return view('guru-bk.index', compact('guru_bk'));
     }
 
     public function create()
     {
-        return view('guru-bk.create');
+        $list_kelas = \App\Models\Kelas::all();
+        return view('guru-bk.create', compact('list_kelas'));
     }
 
     public function store(Request $request)
@@ -27,6 +28,8 @@ class GuruBKController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'nuptk' => 'nullable|string|size:16|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|in:admin_bk,guru_bk,wali_kelas,kepala_sekolah',
+            'class_id' => 'nullable|required_if:role,wali_kelas|exists:kelas,id',
             'jabatan' => 'required|string|max:255',
             'no_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string',
@@ -38,20 +41,22 @@ class GuruBKController extends Controller
             'email' => $request->email,
             'nuptk' => $request->nuptk,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'class_id' => $request->role === 'wali_kelas' ? $request->class_id : null,
             'jabatan' => $request->jabatan,
-            'role' => 'admin_bk',
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
             'is_active' => $request->is_active,
         ]);
 
-        return redirect()->route('guru-bk.index')->with('success', 'Akun Guru BK berhasil ditambahkan!');
+        return redirect()->route('guru-bk.index')->with('success', 'Akun pengguna berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
         $guru = User::findOrFail($id);
-        return view('guru-bk.edit', compact('guru'));
+        $list_kelas = \App\Models\Kelas::all();
+        return view('guru-bk.edit', compact('guru', 'list_kelas'));
     }
 
     public function update(Request $request, $id)
@@ -63,6 +68,8 @@ class GuruBKController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($guru->id)],
             'nuptk' => ['nullable', 'string', 'size:16', Rule::unique('users')->ignore($guru->id)],
             'password' => 'nullable|string|min:8|confirmed',
+            'role' => 'required|string|in:admin_bk,guru_bk,wali_kelas,kepala_sekolah',
+            'class_id' => 'nullable|required_if:role,wali_kelas|exists:kelas,id',
             'jabatan' => 'required|string|max:255',
             'no_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string',
@@ -73,6 +80,8 @@ class GuruBKController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'nuptk' => $request->nuptk,
+            'role' => $request->role,
+            'class_id' => $request->role === 'wali_kelas' ? $request->class_id : null,
             'jabatan' => $request->jabatan,
             'no_hp' => $request->no_hp,
             'alamat' => $request->alamat,
@@ -86,7 +95,7 @@ class GuruBKController extends Controller
 
         $guru->update($data);
 
-        return redirect()->route('guru-bk.index')->with('success', 'Data Guru BK berhasil diperbarui!');
+        return redirect()->route('guru-bk.index')->with('success', 'Data pengguna berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -100,6 +109,6 @@ class GuruBKController extends Controller
 
         $guru->delete();
 
-        return redirect()->route('guru-bk.index')->with('success', 'Akun Guru BK berhasil dihapus!');
+        return redirect()->route('guru-bk.index')->with('success', 'Akun pengguna berhasil dihapus!');
     }
 }

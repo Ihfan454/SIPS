@@ -13,6 +13,16 @@ class SiswaController extends Controller
     {
         $query = Siswa::withSum('pelanggarans as total_poin', 'poin');
 
+        // Batasi Wali Kelas agar hanya melihat kelas yang diampunya
+        if (auth()->user()->isWaliKelas()) {
+            if (auth()->user()->class_id) {
+                $query->where('class_id', auth()->user()->class_id);
+            } else {
+                // Jika wali kelas tidak punya kelas, kembalikan kosong
+                return response()->json(['data' => []]);
+            }
+        }
+
         if ($request->filled('kelas') && $request->kelas !== 'all') {
             $query->where('kelas', $request->kelas);
         }
@@ -37,13 +47,33 @@ class SiswaController extends Controller
 
     public function stats(): JsonResponse
     {
-        $siswas = Siswa::all();
+        $query = Siswa::query();
+        
+        // Batasi Wali Kelas
+        if (auth()->user()->isWaliKelas()) {
+            if (auth()->user()->class_id) {
+                $query->where('class_id', auth()->user()->class_id);
+            } else {
+                return response()->json([
+                    'total' => 0,
+                    'aktif' => 0,
+                    'nonaktif' => 0,
+                    'total_kelas' => 0,
+                ]);
+            }
+        }
+
+        $siswas = $query->get();
+        
+        $totalKelas = auth()->user()->isWaliKelas()
+            ? (auth()->user()->class_id ? 1 : 0)
+            : \App\Models\Kelas::count();
 
         return response()->json([
             'total' => $siswas->count(),
             'aktif' => $siswas->where('is_active', true)->count(),
             'nonaktif' => $siswas->where('is_active', false)->count(),
-            'total_kelas' => $siswas->pluck('kelas')->unique()->count(),
+            'total_kelas' => $totalKelas,
         ]);
     }
 
@@ -52,17 +82,16 @@ class SiswaController extends Controller
      */
     public function kelas(): JsonResponse
     {
-        $kelasGuru = \App\Models\GuruKelas::whereNotNull('kelas_wali')
-            ->where('kelas_wali', '!=', '')
-            ->pluck('kelas_wali')
-            ->toArray();
+        if (auth()->user()->isWaliKelas()) {
+            if (auth()->user()->class_id) {
+                $kelasName = auth()->user()->kelas ? auth()->user()->kelas->nama : null;
+                $kelas = $kelasName ? [$kelasName] : [];
+                return response()->json(['data' => $kelas]);
+            }
+            return response()->json(['data' => []]);
+        }
 
-        $kelasSiswa = Siswa::whereNotNull('kelas')
-            ->where('kelas', '!=', '')
-            ->pluck('kelas')
-            ->toArray();
-
-        $kelas = array_unique(array_merge($kelasGuru, $kelasSiswa));
+        $kelas = \App\Models\Kelas::pluck('nama')->toArray();
         sort($kelas);
 
         return response()->json(['data' => array_values($kelas)]);
@@ -70,6 +99,10 @@ class SiswaController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        if (!auth()->user()->isAdminBK() && !auth()->user()->isGuruBK()) {
+            return response()->json(['message' => 'Aksi tidak diizinkan untuk peran Anda.'], 403);
+        }
+
         $validated = $request->validate([
             'nis' => ['required', 'string', 'max:20', 'unique:siswa,nis'],
             'nisn' => ['required', 'string', 'max:20', 'unique:siswa,nisn'],
@@ -80,6 +113,10 @@ class SiswaController extends Controller
             'alamat' => ['nullable', 'string'],
             'is_active' => ['boolean'],
         ]);
+
+        // Cari kelas_id yang sesuai nama kelas
+        $kelasModel = \App\Models\Kelas::where('nama', $request->kelas)->first();
+        $validated['class_id'] = $kelasModel ? $kelasModel->id : null;
 
         $validated['tahun_ajaran'] = '2025/2026';
         $validated['is_active'] = $request->boolean('is_active', true);
@@ -98,6 +135,10 @@ class SiswaController extends Controller
 
     public function update(Request $request, Siswa $siswa): JsonResponse
     {
+        if (!auth()->user()->isAdminBK() && !auth()->user()->isGuruBK()) {
+            return response()->json(['message' => 'Aksi tidak diizinkan untuk peran Anda.'], 403);
+        }
+
         $validated = $request->validate([
             'nis' => ['required', 'string', 'max:20', 'unique:siswa,nis,'.$siswa->id],
             'nisn' => ['required', 'string', 'max:20', 'unique:siswa,nisn,'.$siswa->id],
@@ -108,6 +149,10 @@ class SiswaController extends Controller
             'alamat' => ['nullable', 'string'],
             'is_active' => ['boolean'],
         ]);
+
+        // Cari kelas_id yang sesuai nama kelas
+        $kelasModel = \App\Models\Kelas::where('nama', $request->kelas)->first();
+        $validated['class_id'] = $kelasModel ? $kelasModel->id : null;
 
         $validated['is_active'] = $request->boolean('is_active', true);
         
@@ -125,6 +170,10 @@ class SiswaController extends Controller
 
     public function destroy(Siswa $siswa): JsonResponse
     {
+        if (!auth()->user()->isAdminBK() && !auth()->user()->isGuruBK()) {
+            return response()->json(['message' => 'Aksi tidak diizinkan untuk peran Anda.'], 403);
+        }
+
         $siswa->delete();
 
         return response()->json(['message' => 'Data siswa berhasil dihapus']);

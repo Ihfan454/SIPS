@@ -48,12 +48,14 @@ function renderTable() {
                 ${siswa.poin > 0 ? `<span style="color: ${siswa.poin > 20 ? '#ef4444' : '#f59e0b'}; font-weight: 700;">${siswa.poin}</span>` : '0'}
             </td>
             <td>
+                ${window.userCanCRUD ? `
                 <button class="btn-edit" onclick="editSiswa(${siswa.id})">
                     <i class="fas fa-edit"></i>
                 </button>
                 <button class="btn-delete" onclick="deleteSiswa(${siswa.id})">
                     <i class="fas fa-trash"></i>
                 </button>
+                ` : '<span style="color:#94a3b8;font-size:0.75rem;">Read Only</span>'}
             </td>
         </tr>
     `).join('');

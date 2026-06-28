@@ -16,6 +16,7 @@ class Siswa extends Model
         'nama_lengkap',
         'jenis_kelamin',
         'kelas',
+        'class_id',
         'tahun_ajaran',
         'no_hp',
         'alamat',
@@ -28,6 +29,11 @@ class Siswa extends Model
         return [
             'is_active' => 'boolean',
         ];
+    }
+
+    public function kelasRelation(): BelongsTo
+    {
+        return $this->belongsTo(Kelas::class, 'class_id');
     }
 
     public function waliKelas(): BelongsTo

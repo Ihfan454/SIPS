@@ -74,7 +74,20 @@
                                 <td>{{ $guru->nuptk ?? '-' }}</td>
                                 <td class="text-accent" style="font-weight: 600;">{{ $guru->name }}</td>
                                 <td>{{ $guru->email }}</td>
-                                <td>{{ $guru->jabatan ?? '-' }}</td>
+                                <td>
+                                    @if($guru->role === 'admin_bk')
+                                        Admin BK
+                                    @elseif($guru->role === 'guru_bk')
+                                        Guru BK
+                                    @elseif($guru->role === 'wali_kelas')
+                                        Wali Kelas ({{ $guru->kelas ? $guru->kelas->nama : 'Belum Ditentukan' }})
+                                    @elseif($guru->role === 'kepala_sekolah')
+                                        Kepala Sekolah
+                                    @else
+                                        {{ ucfirst(str_replace('_', ' ', $guru->role)) }}
+                                    @endif
+                                    / {{ $guru->jabatan ?? '-' }}
+                                </td>
                                 <td>{{ $guru->no_hp ?? '-' }}</td>
                                 <td>
                                     <span class="badge-status {{ $guru->is_active ? 'badge-status-aktif' : 'badge-status-nonaktif' }}">
